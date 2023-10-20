@@ -195,12 +195,14 @@ const Login = ({ isUserAuthenticated }) => {
                                     onChange={(e) => onInputChange(e)}
                                     name="name"
                                     id="name"
+                                    required
                                 />
                                 <p>Enter your username:</p>
                                 <input
                                     onChange={(e) => onInputChange(e)}
                                     name="username"
                                     id="username"
+                                    required
                                 />
                                 <p>Enter your email:</p>
                                 <input
@@ -209,16 +211,17 @@ const Login = ({ isUserAuthenticated }) => {
                                     name="email"
                                     id="email"
                                     placeholder="email@example.com"
+                                    required
                                 />
                                 <p>Enter your phone number:</p>
                                 <input
                                     type="tel"
-                                    required
                                     onChange={(e) => onInputChange(e)}
                                     name="phone"
                                     id="phone"
                                     pattern="[0-9]{10}"
                                     placeholder="Số điện thoại(10 số)"
+                                    required
                                 />
                                 <p>Enter your password:</p>
                                 <input
@@ -228,6 +231,7 @@ const Login = ({ isUserAuthenticated }) => {
                                     id="password"
                                     pattern="(?=.*\d)(?=.*[a-z]).{8,}"
                                     placeholder="ít nhất 8 ký tự bao gồm chữ thường và chữ số"
+                                    required
                                 />
                             </div>
                             <div

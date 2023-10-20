@@ -2,20 +2,30 @@ import { Link, useParams } from 'react-router-dom';
 import { Edit, Add } from '@mui/icons-material';
 
 import { styled, Box, Grid } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { API } from '../../../service/api';
 import Post from '../../home/post/Post';
 import Pagination from '../../Pagination';
+import { DataContext } from '../../../context/DataProvider';
 
 const Image = styled('img')({
     width: '80%',
-    height: '70vh',
+    height: '40vh',
     objectFit: 'cover',
+    objectPosition: 'top',
+});
+
+const AvatarImage = styled('img')({
+    width: '200px',
+    height: '200px',
+    objectFit: 'cover',
+    borderRadius: '50%',
+    objectPosition: 'top',
 });
 
 const UserDiv = styled('div')({
-    display: 'flex',
     justifyContent: 'space-around',
+    height: '200px',
 });
 
 const Div = styled('div')({
@@ -40,10 +50,15 @@ const Wrapper = styled('div')`
 `;
 
 const User = () => {
+    const { account } = useContext(DataContext);
+
     const [info, setInfo] = useState({});
     const [background, setBackground] = useState('');
     const [bgUrl, setBgURL] = useState(
         'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80'
+    );
+    const [avatar, setAvatar] = useState(
+        'https://static.thenounproject.com/png/12017-200.png'
     );
     const [posts, setPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
@@ -77,10 +92,10 @@ const User = () => {
     //upload img
     useEffect(() => {
         const getImage = async () => {
-            if (file) {
+            if (background) {
                 const data = new FormData();
-                data.append('name', file.name);
-                data.append('file', file);
+                data.append('name', background.name);
+                data.append('file', background);
 
                 const response = await API.uploadFile(data);
                 if (response.isSuccess) {
@@ -94,7 +109,24 @@ const User = () => {
         // eslint-disable-next-line
     }, [background]);
 
-    const url = 'https://static.thenounproject.com/png/12017-200.png';
+    useEffect(() => {
+        const getImage = async () => {
+            if (avatar) {
+                const data = new FormData();
+                data.append('name', avatar.name);
+                data.append('file', avatar);
+
+                const response = await API.uploadFile(data);
+                if (response.isSuccess) {
+                    info.avatar = response.data;
+                    setAvatar(response.data);
+                    await API.editUser(info);
+                }
+            }
+        };
+        getImage();
+        // eslint-disable-next-line
+    }, [avatar]);
 
     //change page
     const paginate = (e) =>
@@ -110,39 +142,93 @@ const User = () => {
                     position: 'relative',
                 }}>
                 <Image src={info.background || bgUrl} alt="background" />
-                <div
-                    style={{
-                        position: 'absolute',
-                        bottom: '-16px',
-                        right: '180px',
-                    }}>
-                    <label htmlFor="fileInput">
-                        <Add fontSize="large" color="action" />
-                    </label>
-                    <input
-                        type="file"
-                        id="fileInput"
-                        style={{ display: 'none' }}
-                        onChange={(e) => setBackground(e.target.files[0])}
-                    />
-                </div>
+                {account.username === info.username && (
+                    <div
+                        style={{
+                            position: 'absolute',
+                            bottom: '8px',
+                            right: '160px',
+                        }}>
+                        <label
+                            htmlFor="backgroundInput"
+                            style={{
+                                backgroundColor: '#22c5e8',
+                                borderRadius: '50%',
+                            }}>
+                            <Add fontSize="large" color="action" />
+                        </label>
+                        <input
+                            type="file"
+                            id="backgroundInput"
+                            style={{ display: 'none' }}
+                            onChange={(e) => setBackground(e.target.files[0])}
+                        />
+                    </div>
+                )}
             </div>
             <UserDiv className="d-flex">
                 <Div>
-                    <img src={info.avatar || url} alt="user-avatar" />
-                    <div className="pt-4">
+                    <div
+                        className="d-flex justify-content-center"
+                        style={{
+                            paddingTop: '56px',
+                            alignItems: 'center',
+                            position: 'relative',
+                        }}>
+                        <AvatarImage
+                            src={info.avatar || avatar}
+                            alt="user-avatar"
+                        />
+                        {account.username === info.username && (
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    bottom: '10px',
+                                    right: '14px',
+                                }}>
+                                <label
+                                    htmlFor="avatarInput"
+                                    style={{
+                                        backgroundColor: '#22c5e8',
+                                        borderRadius: '50%',
+                                    }}>
+                                    <Add fontSize="large" color="action" />
+                                </label>
+                                <input
+                                    type="file"
+                                    id="avatarInput"
+                                    style={{ display: 'none' }}
+                                    onChange={(e) =>
+                                        setAvatar(e.target.files[0])
+                                    }
+                                />
+                            </div>
+                        )}
+                    </div>
+                    <div style={{ paddingTop: '7.5rem', marginLeft: '1.5rem' }}>
                         <h3 className="mb-1 mt-2">{info.name}</h3>
                         <p className="mb-1">Phone: {info.phone}</p>
                         <p className="mb-1">Email: {info.email}</p>
                     </div>
                 </Div>
-                <div>
-                    <Link
-                        to={`/user/edit/${info.username}`}
-                        style={{ textDecoration: 'none' }}>
-                        <EditIcon color="primary" />
-                        <span>Edit your profile</span>
-                    </Link>
+                <div style={{ width: '150px' }}>
+                    {account.admin === 'admin' ? (
+                        <Link
+                            to={`/user/edit/${info.username}`}
+                            style={{ textDecoration: 'none' }}>
+                            <EditIcon color="primary" />
+                            <span>Edit your profile</span>
+                        </Link>
+                    ) : (
+                        account.username === info.username && (
+                            <Link
+                                to={`/user/edit/${info.username}`}
+                                style={{ textDecoration: 'none' }}>
+                                <EditIcon color="primary" />
+                                <span>Edit your profile</span>
+                            </Link>
+                        )
+                    )}
                 </div>
             </UserDiv>
             {posts?.length > 0 ? (

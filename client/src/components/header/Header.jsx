@@ -18,13 +18,13 @@ const Header = () => {
         await API.userLogout(account.token);
     };
 
-    const handleLogout = () => {
+    const handleLogout = (e) => {
         //eslint-disable-next-line no-restricted-globals
         if (confirm('Logout?') === true) {
             deleteToken();
             navigate('/account');
         } else {
-            navigate('/');
+            e.preventDefault();
         }
     };
 
@@ -32,7 +32,7 @@ const Header = () => {
         <Nav className="navbar navbar-expand-lg navbar-dark bg-dark position-fixed">
             <div className="container-fluid">
                 <div
-                    className="collapse navbar-collapse justify-content-center"
+                    className="collapse navbar-collapse justify-content-end"
                     id="navbarSupportedContent">
                     <ul className="navbar-nav mb-lg-0">
                         <li className="nav-item">
@@ -61,7 +61,8 @@ const Header = () => {
                             </div>
                             <ul
                                 className="dropdown-menu"
-                                aria-labelledby="navbarDropdown">
+                                aria-labelledby="navbarDropdown"
+                                style={{ left: '-100px' }}>
                                 {account.admin && (
                                     <li>
                                         <Link
@@ -83,7 +84,7 @@ const Header = () => {
                                 </li>
                                 <li>
                                     <button
-                                        onClick={() => handleLogout()}
+                                        onClick={(e) => handleLogout(e)}
                                         className="dropdown-item">
                                         LOGOUT
                                     </button>
