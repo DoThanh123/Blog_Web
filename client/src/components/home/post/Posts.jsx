@@ -72,8 +72,10 @@ const Posts = () => {
                         color: '878787',
                         margin: '30px 80px',
                         fontSize: 18,
+                        width: '100%',
+                        textAlign: 'center',
                     }}>
-                    No data is available for selected category
+                    Chưa có blog nào thuộc danh mục này
                 </Box>
             )}
         </>

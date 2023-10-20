@@ -72,6 +72,7 @@ const EditUser = () => {
                         name="email"
                         id="email"
                         value={info.email}
+                        placeholder="Example: email@gmail.com"
                     />
 
                     <p>Enter your phone number:</p>
@@ -83,6 +84,7 @@ const EditUser = () => {
                         id="phone"
                         value={info.phone}
                         pattern="[0-9]{10}"
+                        placeholder="Số điện thoại 10 số"
                     />
                 </Wrapper>
                 <div className="d-flex justify-content-end me-4">
