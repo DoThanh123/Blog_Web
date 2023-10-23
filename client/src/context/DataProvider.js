@@ -6,7 +6,7 @@ const DataProvider = ({ children }) => {
     const [account, setAccount] = useState({
         name: '',
         username: '',
-        admin: false,
+        admin: '',
         avatar: '',
         background: '',
         email: '',

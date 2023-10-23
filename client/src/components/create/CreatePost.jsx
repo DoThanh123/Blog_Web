@@ -89,7 +89,8 @@ const CreatePost = () => {
         // eslint-disable-next-line
     }, [file]);
 
-    const savePost = async () => {
+    const savePost = async (e) => {
+        e.preventDefault();
         await API.createPost(post);
         navigate('/');
     };
@@ -102,35 +103,45 @@ const CreatePost = () => {
         <Container>
             <Image src={url} alt="post" />
 
-            <StyledFormControl>
-                <label htmlFor="fileInput">
-                    <Add fontSize="large" color="action" />
-                </label>
-                <input
-                    type="file"
-                    id="fileInput"
-                    style={{ display: 'none' }}
-                    onChange={(e) => setFile(e.target.files[0])}
-                />
-                <InputTextField
+            <form onSubmit={(e) => savePost(e)}>
+                <StyledFormControl>
+                    <label htmlFor="fileInput">
+                        <Add fontSize="large" color="action" />
+                    </label>
+                    <input
+                        type="file"
+                        id="fileInput"
+                        style={{ display: 'none' }}
+                        onChange={(e) => setFile(e.target.files[0])}
+                    />
+                    <InputTextField
+                        onChange={(e) => handleChange(e)}
+                        name="title"
+                        placeholder="Title"
+                        required
+                    />
+                    <Button
+                        onClick={() => navigate('/')}
+                        variant="contained"
+                        color="error">
+                        Cancel
+                    </Button>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        style={{ marginLeft: '4px' }}>
+                        Publish
+                    </Button>
+                </StyledFormControl>
+                <Textarea
+                    minRows={5}
+                    placeholder="Tell your story..."
+                    name="description"
                     onChange={(e) => handleChange(e)}
-                    name="title"
-                    placeholder="Title"
+                    required
                 />
-                <Button
-                    onClick={() => savePost()}
-                    variant="contained"
-                    color="primary">
-                    Publish
-                </Button>
-            </StyledFormControl>
-
-            <Textarea
-                minRows={5}
-                placeholder="Tell your story..."
-                name="description"
-                onChange={(e) => handleChange(e)}
-            />
+            </form>
         </Container>
     );
 };

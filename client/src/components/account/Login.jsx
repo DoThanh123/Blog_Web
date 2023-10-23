@@ -20,7 +20,7 @@ const Image = styled('img')({
 });
 
 const Wrapper = styled(Box)`
-    padding: 25px 35px;
+    padding: 20px 35px;
     display: flex;
     flex: 1;
     overflow: auto;
@@ -62,6 +62,10 @@ const Error = styled(Typography)`
     font-weight: 600;
 `;
 
+const P = styled('p')`
+    margin: 10px 0 4px 0;
+`;
+
 const loginInitialValues = {
     username: '',
     password: '',
@@ -73,6 +77,7 @@ const signupInitialValues = {
     phone: '',
     email: '',
     password: '',
+    admin: false,
 };
 
 const Login = ({ isUserAuthenticated }) => {
@@ -100,41 +105,56 @@ const Login = ({ isUserAuthenticated }) => {
     };
 
     const loginUser = async () => {
-        let response = await API.userLogin(login);
-        if (response.isSuccess) {
-            showError('');
+        try {
+            let response = await API.userLogin(login);
+            // console.log(response);
+            if (response.isSuccess) {
+                showError('');
 
-            sessionStorage.setItem(
-                'accessToken',
-                `Bearer ${response.data.accessToken}`
-            );
-            sessionStorage.setItem(
-                'refreshToken',
-                `Bearer ${response.data.refreshToken}`
-            );
-            setAccount({
-                name: response.data.name,
-                username: response.data.username,
-                admin: response.data.admin,
-                token: response.data.refreshToken,
-            });
+                sessionStorage.setItem(
+                    'accessToken',
+                    `Bearer ${response.data.accessToken}`
+                );
+                sessionStorage.setItem(
+                    'refreshToken',
+                    `Bearer ${response.data.refreshToken}`
+                );
+                setAccount({
+                    name: response.data.name,
+                    username: response.data.username,
+                    admin: response.data.admin,
+                    token: response.data.refreshToken,
+                    avatar: response.data.avatar,
+                });
 
-            isUserAuthenticated(true);
-            setLogin(loginInitialValues);
-            navigate('/');
-        } else {
-            showError('Something went wrong! please try again later');
+                isUserAuthenticated(true);
+                setLogin(loginInitialValues);
+                navigate('/');
+            }
+        } catch (error) {
+            alert('Tài khoản hoặc mật khẩu không chính xác!');
         }
     };
 
     const signupUser = async () => {
-        let response = await API.userSignup(signup);
-        if (response.isSuccess) {
-            showError('');
-            setSignup(signupInitialValues);
-            toggleAccount('login');
+        if (signup.key !== null) {
+            let response = await API.adminSignup(signup);
+            if (response.isSuccess) {
+                showError('');
+                setSignup(signupInitialValues);
+                toggleAccount('login');
+            } else {
+                showError('Something went wrong! please try again later');
+            }
         } else {
-            showError('Something went wrong! please try again later');
+            let response = await API.userSignup(signup);
+            if (response.isSuccess) {
+                showError('');
+                setSignup(signupInitialValues);
+                toggleAccount('login');
+            } else {
+                showError('Something went wrong! please try again later');
+            }
         }
     };
 
@@ -190,21 +210,29 @@ const Login = ({ isUserAuthenticated }) => {
                             <div
                                 className="d-flex flex-column"
                                 style={{ width: '100%' }}>
-                                <p>Enter your name:</p>
+                                <P>Enter admin key:</P>
+                                <input
+                                    onChange={(e) => onInputChange(e)}
+                                    name="key"
+                                    id="key"
+                                    placeholder="Nhập để đăng ký tài khoản admin"
+                                    type="password"
+                                />
+                                <P>Enter your name:</P>
                                 <input
                                     onChange={(e) => onInputChange(e)}
                                     name="name"
                                     id="name"
                                     required
                                 />
-                                <p>Enter your username:</p>
+                                <P>Enter your username:</P>
                                 <input
                                     onChange={(e) => onInputChange(e)}
                                     name="username"
                                     id="username"
                                     required
                                 />
-                                <p>Enter your email:</p>
+                                <P>Enter your email:</P>
                                 <input
                                     type="email"
                                     onChange={(e) => onInputChange(e)}
@@ -213,7 +241,7 @@ const Login = ({ isUserAuthenticated }) => {
                                     placeholder="email@example.com"
                                     required
                                 />
-                                <p>Enter your phone number:</p>
+                                <P>Enter your phone number:</P>
                                 <input
                                     type="tel"
                                     onChange={(e) => onInputChange(e)}
@@ -223,7 +251,7 @@ const Login = ({ isUserAuthenticated }) => {
                                     placeholder="Số điện thoại(10 số)"
                                     required
                                 />
-                                <p>Enter your password:</p>
+                                <P>Enter your password:</P>
                                 <input
                                     type="password"
                                     onChange={(e) => onInputChange(e)}

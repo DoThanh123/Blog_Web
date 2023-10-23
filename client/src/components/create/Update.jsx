@@ -53,9 +53,9 @@ const initialPost = {
     title: '',
     description: '',
     picture: '',
-    username: 'codeforinterview',
+    username: '',
     name: '',
-    categories: 'Tech',
+    categories: '',
 };
 
 const Update = () => {
@@ -97,7 +97,8 @@ const Update = () => {
         // eslint-disable-next-line
     }, [file]);
 
-    const updateBlogPost = async () => {
+    const updateBlogPost = async (e) => {
+        e.preventDefault();
         await API.updatePost(post);
         navigate(`/details/${id}`);
     };
@@ -110,37 +111,41 @@ const Update = () => {
         <Container>
             <Image src={post.picture || imageURL} alt="post" />
 
-            <StyledFormControl>
-                <label htmlFor="fileInput">
-                    <Add fontSize="large" color="action" />
-                </label>
-                <input
-                    type="file"
-                    id="fileInput"
-                    style={{ display: 'none' }}
-                    onChange={(e) => setFile(e.target.files[0])}
-                />
-                <InputTextField
+            <form onSubmit={(e) => updateBlogPost(e)}>
+                <StyledFormControl>
+                    <label htmlFor="fileInput">
+                        <Add fontSize="large" color="action" />
+                    </label>
+                    <input
+                        type="file"
+                        id="fileInput"
+                        style={{ display: 'none' }}
+                        onChange={(e) => setFile(e.target.files[0])}
+                    />
+                    <InputTextField
+                        onChange={(e) => handleChange(e)}
+                        value={post.title}
+                        name="title"
+                        placeholder="Title"
+                    />
+                    <Button
+                        onClick={() => navigate(`/details/${id}`)}
+                        variant="contained"
+                        color="error">
+                        Cancel
+                    </Button>
+                    <Button type="submit" variant="contained" color="primary">
+                        Update
+                    </Button>
+                </StyledFormControl>
+                <StyledTextArea
+                    minRows={5}
+                    placeholder="Tell your story..."
+                    name="description"
                     onChange={(e) => handleChange(e)}
-                    value={post.title}
-                    name="title"
-                    placeholder="Title"
+                    value={post.description}
                 />
-                <Button
-                    onClick={() => updateBlogPost()}
-                    variant="contained"
-                    color="primary">
-                    Update
-                </Button>
-            </StyledFormControl>
-
-            <StyledTextArea
-                minRows={5}
-                placeholder="Tell your story..."
-                name="description"
-                onChange={(e) => handleChange(e)}
-                value={post.description}
-            />
+            </form>
         </Container>
     );
 };

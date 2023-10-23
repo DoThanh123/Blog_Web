@@ -19,6 +19,7 @@ import {
 import {
     loginUser,
     signupUser,
+    signupAdmin,
     logoutUser,
     getAllUser,
     editUser,
@@ -36,6 +37,7 @@ const router = express.Router();
 
 router.post('/login', loginUser);
 router.post('/signup', signupUser);
+router.post('/signupAdmin', signupAdmin);
 router.delete('/logout/:token', logoutUser);
 router.get('/admin', authenticateToken, getAllUser);
 router.get('/user/:username', authenticateToken, getUser);

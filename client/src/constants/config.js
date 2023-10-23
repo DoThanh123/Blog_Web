@@ -30,6 +30,7 @@ export const API_NOTIFICATION_MESSAGES = {
 export const SERVICE_URLS = {
     userLogin: { url: '/login', method: 'POST' },
     userSignup: { url: '/signup', method: 'POST' },
+    adminSignup: { url: '/signupAdmin', method: 'POST' },
     getAllUser: { url: '/admin', method: 'GET' },
     getUser: { url: 'user', method: 'GET', query: true },
     deleteUser: { url: 'user/delete', method: 'DELETE', query: true },

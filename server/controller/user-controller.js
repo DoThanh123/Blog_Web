@@ -8,11 +8,8 @@ import User from '../model/user.js';
 // dotenv.config();
 
 export const signupUser = async (request, response) => {
+    const hashedPassword = await bcrypt.hash(request.body.password, 10);
     try {
-        // const salt = await bcrypt.genSalt();
-        // const hashedPassword = await bcrypt.hash(request.body.password, salt);
-        const hashedPassword = await bcrypt.hash(request.body.password, 10);
-
         const user = {
             username: request.body.username,
             name: request.body.name,
@@ -24,11 +21,36 @@ export const signupUser = async (request, response) => {
         const newUser = new User(user);
         await newUser.save();
 
-        return response.status(200).json({ msg: 'Signup successfull' });
+        return response.status(200).json({ msg: 'Signup success' });
     } catch (error) {
         return response
             .status(500)
             .json({ msg: 'Error while signing up user' });
+    }
+};
+
+export const signupAdmin = async (request, response) => {
+    const hashedPassword = await bcrypt.hash(request.body.password, 10);
+    let user;
+    try {
+        if (request.body.key === process.env.SECRET_KEY) {
+            user = {
+                username: request.body.username,
+                name: request.body.name,
+                phone: request.body.phone,
+                email: request.body.email,
+                password: hashedPassword,
+                admin: true,
+            };
+            const newUser = new User(user);
+            await newUser.save();
+
+            return response.status(200).json({ msg: 'Signup success' });
+        } else {
+            return response.status(400).json({ msg: 'admin key is wrong' });
+        }
+    } catch (error) {
+        return response.status(500).json({ msg: 'error while sign up' });
     }
 };
 
@@ -60,6 +82,7 @@ export const loginUser = async (request, response) => {
                 name: user.name,
                 username: user.username,
                 admin: user.admin,
+                avatar: user.avatar,
             });
         } else {
             response.status(400).json({ msg: 'Password does not match' });
@@ -88,7 +111,7 @@ export const getAllUser = async (req, res) => {
 
 export const getUser = async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.params.username });
+        const user = await User.find({ username: req.params.username });
 
         res.status(200).json(user);
     } catch (error) {

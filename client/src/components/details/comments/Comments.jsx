@@ -12,17 +12,18 @@ import Comment from './Comment';
 const Container = styled(Box)`
     margin-top: 100px;
     display: flex;
+    justify-content: space-between;
 `;
 
 const Image = styled('img')({
-    width: 50,
-    height: 50,
+    width: '50px !important',
+    height: '50px',
     borderRadius: '50%',
 });
 
 const StyledTextArea = styled(TextareaAutosize)`
     height: 100px !important;
-    width: 100%;
+    flex: 20;
     margin: 0 20px;
 `;
 
@@ -75,7 +76,6 @@ const Comments = ({ post, socket }) => {
         setComment({
             ...comment,
             username: account.username,
-            name: account.name,
             postId: post._id,
             comments: e.target.value,
         });
@@ -106,7 +106,7 @@ const Comments = ({ post, socket }) => {
     return (
         <Box>
             <Container>
-                <Image src={url} alt="dp" />
+                <Image src={account.avatar || url} alt="dp" />
                 <StyledTextArea
                     minRows={5}
                     placeholder="what's on your mind?"

@@ -9,9 +9,18 @@ import { API } from '../../service/api';
 const Nav = styled('nav')`
     z-index: 1000;
     width: 100%;
+    height: 56px;
+`;
+
+const Image = styled('img')`
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 4px;
 `;
 
 const Header = () => {
+    const avatarUrl = 'https://static.thenounproject.com/png/12017-200.png';
     const navigate = useNavigate();
     const { account } = useContext(DataContext);
     const deleteToken = async () => {
@@ -30,8 +39,9 @@ const Header = () => {
 
     return (
         <Nav className="navbar navbar-expand-lg navbar-dark bg-dark position-fixed">
-            <div className="container-fluid">
+            <div className="container-fluid" style={{ height: '40px' }}>
                 <div
+                    style={{ height: '40px' }}
                     className="collapse navbar-collapse justify-content-end"
                     id="navbarSupportedContent">
                     <ul className="navbar-nav mb-lg-0">
@@ -57,12 +67,13 @@ const Header = () => {
                                 role="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false">
+                                <Image src={account.avatar || avatarUrl} />
                                 {account.name}
                             </div>
                             <ul
                                 className="dropdown-menu"
                                 aria-labelledby="navbarDropdown"
-                                style={{ left: '-100px' }}>
+                                style={{ left: '-80px' }}>
                                 {account.admin && (
                                     <li>
                                         <Link

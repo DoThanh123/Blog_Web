@@ -96,7 +96,9 @@ const Admin = () => {
                                 <th scope="col">Index</th>
                                 <th scope="col">Username</th>
                                 <th scope="col">Name</th>
-                                <th scope="col">Password</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone Number</th>
+                                <th scope="col">Role</th>
                                 <th scope="col">Created At</th>
                                 <th scope="col">Tool</th>
                             </tr>
@@ -109,7 +111,13 @@ const Admin = () => {
                                     </th>
                                     <td>{account.username}</td>
                                     <td>{account.name}</td>
-                                    <td>{account.password}</td>
+                                    <td>{account.email}</td>
+                                    <td>{account.phone}</td>
+                                    <td>
+                                        {account.admin === true
+                                            ? 'admin'
+                                            : 'user'}
+                                    </td>
                                     <td>{account.createdAt}</td>
                                     <td>
                                         <Link to={`/user/${account.username}`}>

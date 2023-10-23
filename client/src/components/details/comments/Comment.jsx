@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Typography, Box, styled } from '@mui/material';
 import { Delete } from '@mui/icons-material';
@@ -18,10 +18,18 @@ const Container = styled(Box)`
     margin-bottom: 5px;
 `;
 
+const Image = styled('img')({
+    width: '20px',
+    height: '20px',
+    borderRadius: '50%',
+});
+
 const Name = styled(Typography)`
     font-weight: 600,
-    font-size: 18px;
-    margin-right: 20px;
+    font-size: 24px;
+    margin:0 20px 2px 6px;
+    text-align: center;
+    color: #000;
 `;
 
 const StyledDate = styled(Typography)`
@@ -35,6 +43,17 @@ const DeleteIcon = styled(Delete)`
 
 const Comment = ({ comment, socket, post }) => {
     const { account } = useContext(DataContext);
+    const [user, setUser] = useState({});
+    const avatarUrl = 'https://static.thenounproject.com/png/12017-200.png';
+
+    useEffect(() => {
+        const getUser = async () => {
+            let response = await API.getUser(comment.username);
+            setUser(response.data[0]);
+        };
+        getUser();
+        // eslint-disable-next-line
+    }, [comment]);
 
     const removeComment = async (e) => {
         if (
@@ -57,9 +76,11 @@ const Comment = ({ comment, socket, post }) => {
         <Component>
             <Container>
                 <Link
+                    className="d-flex justify-content-center align-items-center"
                     to={`/user/${comment.username}`}
                     style={{ textDecoration: 'none' }}>
-                    <Name>{comment.name}</Name>
+                    <Image src={user.avatar || avatarUrl} />
+                    <Name>{user.name}</Name>
                 </Link>
                 <StyledDate>
                     {new Date(comment.createdAt).toDateString()}
@@ -67,7 +88,7 @@ const Comment = ({ comment, socket, post }) => {
                 {account.admin ? (
                     <DeleteIcon onClick={(e) => removeComment(e)} />
                 ) : (
-                    comment.name === account.username && (
+                    comment.username === account.username && (
                         <DeleteIcon onClick={(e) => removeComment(e)} />
                     )
                 )}

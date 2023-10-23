@@ -45,7 +45,7 @@ const EditIcon = styled(Edit)`
 const Wrapper = styled('div')`
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     padding: 10px;
 `;
 
@@ -53,32 +53,36 @@ const User = () => {
     const { account } = useContext(DataContext);
 
     const [info, setInfo] = useState({});
+
     const [background, setBackground] = useState('');
     const [bgUrl, setBgURL] = useState(
         'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80'
     );
+
+    const [userAvatar, setUserAvatar] = useState('');
     const [avatar, setAvatar] = useState(
         'https://static.thenounproject.com/png/12017-200.png'
     );
+
     const [posts, setPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     // eslint-disable-next-line
-    const [postPerPage, setPostPerPage] = useState(5);
+    const [postPerPage, setPostPerPage] = useState(4);
     const indexOfLastPost = currentPage + postPerPage;
     const currentPosts = posts.slice(currentPage, indexOfLastPost);
     const username = useParams();
-
+    //get user info
     useEffect(() => {
         const user = async () => {
             let res = await API.getUser(username.username);
             if (res.isSuccess) {
-                setInfo(res.data);
+                setInfo(res.data[0]);
             }
         };
         user();
         // eslint-disable-next-line
     }, [username]);
-
+    //get posts
     useEffect(() => {
         const getPost = async () => {
             let res = await API.getPostByUsername(username.username);
@@ -89,7 +93,7 @@ const User = () => {
         getPost();
         // eslint-disable-next-line
     }, [username]);
-    //upload img
+    //upload background
     useEffect(() => {
         const getImage = async () => {
             if (background) {
@@ -108,17 +112,17 @@ const User = () => {
         getImage();
         // eslint-disable-next-line
     }, [background]);
-
+    //upload avatar
     useEffect(() => {
         const getImage = async () => {
-            if (avatar) {
+            if (userAvatar) {
                 const data = new FormData();
-                data.append('name', avatar.name);
-                data.append('file', avatar);
+                data.append('name', userAvatar.name);
+                data.append('file', userAvatar);
 
                 const response = await API.uploadFile(data);
                 if (response.isSuccess) {
-                    info.avatar = response.data;
+                    info.userAvatar = response.data;
                     setAvatar(response.data);
                     await API.editUser(info);
                 }
@@ -199,7 +203,7 @@ const User = () => {
                                     id="avatarInput"
                                     style={{ display: 'none' }}
                                     onChange={(e) =>
-                                        setAvatar(e.target.files[0])
+                                        setUserAvatar(e.target.files[0])
                                     }
                                 />
                             </div>
@@ -232,11 +236,11 @@ const User = () => {
                 </div>
             </UserDiv>
             {posts?.length > 0 ? (
-                <>
+                <div style={{ margin: '0 134px' }}>
                     <h2 style={{ marginLeft: '20px' }}>Blogs</h2>
                     <Wrapper>
                         {currentPosts.map((post, index) => (
-                            <Grid key={index} style={{ width: '20%' }}>
+                            <Grid key={index} style={{ width: '25%' }}>
                                 <Link
                                     style={{
                                         textDecoration: 'none',
@@ -255,7 +259,7 @@ const User = () => {
                             paginate={paginate}
                         />
                     </div>
-                </>
+                </div>
             ) : (
                 <Box
                     style={{
