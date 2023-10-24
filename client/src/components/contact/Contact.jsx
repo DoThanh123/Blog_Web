@@ -35,13 +35,6 @@ const Contact = () => {
                         target="_blank">
                         <Facebook />
                     </Link>
-                    or send me an Email
-                    <Link
-                        href="mailto:ruthra20220@gmail.com?Subject=This is a subject"
-                        target="_blank"
-                        color="inherit">
-                        <Email />
-                    </Link>
                     .
                 </Text>
             </Wrapper>

@@ -7,8 +7,8 @@ import { API } from '../../service/api';
 import { DataContext } from '../../context/DataProvider';
 
 const Component = styled(Box)`
-    width: 400px;
-    margin: 30px auto;
+    width: 450px;
+    margin: 20px auto;
     box-shadow: 5px 2px 5px 2px rgb(0 0 0/ 0.6);
 `;
 
@@ -52,6 +52,7 @@ const SignupButton = styled(Button)`
 const Text = styled(Typography)`
     color: #878787;
     font-size: 12px;
+    margin: 2px auto;
 `;
 
 const Error = styled(Typography)`
@@ -64,6 +65,24 @@ const Error = styled(Typography)`
 
 const P = styled('p')`
     margin: 10px 0 4px 0;
+`;
+
+const Input = styled('input')`
+    font: inherit;
+    letter-spacing: inherit;
+    color: currentColor;
+    padding: 4px 0 5px;
+    border: 0;
+    border-bottom: 1px solid currentColor;
+    box-sizing: content-box;
+    background: none;
+    height: 1.4375em;
+    margin: 0;
+    -webkit-tap-highlight-color: transparent;
+    display: block;
+    min-width: 0;
+    width: 100%;
+    outline: none;
 `;
 
 const loginInitialValues = {
@@ -211,7 +230,7 @@ const Login = ({ isUserAuthenticated }) => {
                                 className="d-flex flex-column"
                                 style={{ width: '100%' }}>
                                 <P>Enter admin key:</P>
-                                <input
+                                <Input
                                     onChange={(e) => onInputChange(e)}
                                     name="key"
                                     id="key"
@@ -219,21 +238,21 @@ const Login = ({ isUserAuthenticated }) => {
                                     type="password"
                                 />
                                 <P>Enter your name:</P>
-                                <input
+                                <Input
                                     onChange={(e) => onInputChange(e)}
                                     name="name"
                                     id="name"
                                     required
                                 />
                                 <P>Enter your username:</P>
-                                <input
+                                <Input
                                     onChange={(e) => onInputChange(e)}
                                     name="username"
                                     id="username"
                                     required
                                 />
                                 <P>Enter your email:</P>
-                                <input
+                                <Input
                                     type="email"
                                     onChange={(e) => onInputChange(e)}
                                     name="email"
@@ -242,7 +261,7 @@ const Login = ({ isUserAuthenticated }) => {
                                     required
                                 />
                                 <P>Enter your phone number:</P>
-                                <input
+                                <Input
                                     type="tel"
                                     onChange={(e) => onInputChange(e)}
                                     name="phone"
@@ -252,7 +271,7 @@ const Login = ({ isUserAuthenticated }) => {
                                     required
                                 />
                                 <P>Enter your password:</P>
-                                <input
+                                <Input
                                     type="password"
                                     onChange={(e) => onInputChange(e)}
                                     name="password"

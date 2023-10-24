@@ -21,8 +21,27 @@ const Wrapper = styled(Box)`
     & > div,
     & > button,
     & > p {
-        margin-top: 20px;
+        margin-top: 15px;
+        margin-bottom: 5px;
     }
+`;
+
+const Input = styled('input')`
+    font: inherit;
+    letter-spacing: inherit;
+    color: currentColor;
+    padding: 4px 0 5px;
+    border: 0;
+    border-bottom: 1px solid currentColor;
+    box-sizing: content-box;
+    background: none;
+    height: 1.4375em;
+    margin: 0;
+    -webkit-tap-highlight-color: transparent;
+    display: block;
+    min-width: 0;
+    width: 100%;
+    outline: none;
 `;
 
 const EditUser = () => {
@@ -34,7 +53,7 @@ const EditUser = () => {
         const user = async () => {
             let res = await API.getUser(username.username);
             if (res.isSuccess) {
-                setInfo(res.data);
+                setInfo(res.data[0]);
             }
         };
         user();
@@ -44,7 +63,6 @@ const EditUser = () => {
     const onInputChange = (e) => {
         setInfo({ ...info, [e.target.name]: e.target.value });
     };
-
     const update = async (e) => {
         e.preventDefault();
         await API.editUser(info);
@@ -53,12 +71,12 @@ const EditUser = () => {
 
     return (
         <Component>
-            <form className="p-2" onSubmit={(e) => update(e)}>
+            <form className="p-2 mt-4" onSubmit={(e) => update(e)}>
                 <Wrapper>
                     <h1>Change info</h1>
 
                     <p>Enter your name:</p>
-                    <input
+                    <Input
                         onChange={(e) => onInputChange(e)}
                         name="name"
                         id="name"
@@ -66,7 +84,7 @@ const EditUser = () => {
                     />
 
                     <p>Enter your email:</p>
-                    <input
+                    <Input
                         type="email"
                         onChange={(e) => onInputChange(e)}
                         name="email"
@@ -76,7 +94,7 @@ const EditUser = () => {
                     />
 
                     <p>Enter your phone number:</p>
-                    <input
+                    <Input
                         type="tel"
                         required
                         onChange={(e) => onInputChange(e)}

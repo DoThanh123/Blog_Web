@@ -45,12 +45,13 @@ const EditIcon = styled(Edit)`
 const Wrapper = styled('div')`
     width: 100%;
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     padding: 10px;
 `;
 
 const User = () => {
     const { account } = useContext(DataContext);
+    const { setAccount } = useContext(DataContext);
 
     const [info, setInfo] = useState({});
 
@@ -71,12 +72,17 @@ const User = () => {
     const indexOfLastPost = currentPage + postPerPage;
     const currentPosts = posts.slice(currentPage, indexOfLastPost);
     const username = useParams();
+
     //get user info
     useEffect(() => {
         const user = async () => {
             let res = await API.getUser(username.username);
             if (res.isSuccess) {
                 setInfo(res.data[0]);
+                setAccount({
+                    ...account,
+                    name: res.data[0].name,
+                });
             }
         };
         user();
@@ -122,16 +128,19 @@ const User = () => {
 
                 const response = await API.uploadFile(data);
                 if (response.isSuccess) {
-                    info.userAvatar = response.data;
+                    info.avatar = response.data;
                     setAvatar(response.data);
                     await API.editUser(info);
+                    setAccount({
+                        ...account,
+                        avatar: response.data,
+                    });
                 }
             }
         };
         getImage();
         // eslint-disable-next-line
-    }, [avatar]);
-
+    }, [userAvatar]);
     //change page
     const paginate = (e) =>
         setCurrentPage((e.selected * postPerPage) % posts.length);
@@ -209,7 +218,11 @@ const User = () => {
                             </div>
                         )}
                     </div>
-                    <div style={{ paddingTop: '7.5rem', marginLeft: '1.5rem' }}>
+                    <div
+                        style={{
+                            paddingTop: '7.5rem',
+                            marginLeft: '1.5rem',
+                        }}>
                         <h3 className="mb-1 mt-2">{info.name}</h3>
                         <p className="mb-1">Phone: {info.phone}</p>
                         <p className="mb-1">Email: {info.email}</p>
@@ -252,7 +265,11 @@ const User = () => {
                             </Grid>
                         ))}
                     </Wrapper>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}>
                         <Pagination
                             total={posts.length}
                             perPage={postPerPage}
